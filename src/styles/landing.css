@@ -1,0 +1,800 @@
+:root {
+    --bg-dark: #000000;
+    --bg-darker: #050b14;
+    --neon-cyan: #00f3ff;
+    --neon-gold: #ffaa00;
+    --neon-purple: #bc13fe;
+    --text-main: #ffffff;
+    --text-muted: #a0aec0;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Courier New', Courier, monospace; /* Tech font */
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    overflow-x: hidden;
+}
+
+/* --- Particles Background --- */
+#particles-js {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    background: radial-gradient(circle at center, #000000 0%, #000000 100%);
+}
+
+/* --- Scroll Animations --- */
+.hidden {
+    opacity: 0;
+    transform: translateY(40px);
+    filter: blur(5px);
+    transition: all 1.2s ease-out;
+}
+
+.show {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+}
+
+/* Staggered delays for children elements if needed */
+.price-card:nth-child(2) { transition-delay: 0.2s; }
+.price-card:nth-child(3) { transition-delay: 0.4s; }
+
+/* --- Navbar --- */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 20px 5%;
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4); /* Dark, more transparent background */
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* More subtle border */
+    z-index: 1000;
+}
+
+.logo-brand {
+    display: flex;
+    align-items: center;
+}
+
+.logo-link {
+    text-decoration: none; /* Remove underline from the link */
+    display: flex;
+    align-items: center;
+}
+
+.logo-icon {
+    font-size: 1.5rem; /* Adjust size if needed */
+    margin-right: 8px; /* Space between icon and text */
+}
+
+.logo-text {
+    font-weight: 900;
+    letter-spacing: 2px;
+    font-size: 1.2rem;
+    background: linear-gradient(90deg, #fff, var(--neon-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.nav-container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    width: 100%;
+}
+
+.nav-links {
+    grid-column: 2;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-actions {
+    grid-column: 3;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.nav-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+.nav-link:hover {
+    color: #fff;
+    text-shadow: 0 0 8px var(--neon-cyan);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--neon-cyan);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.nav-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* Style for the login button to make it stand out */
+.nav-link-login {
+    border: 1px solid var(--glass-border);
+    padding: 8px 16px;
+    border-radius: 6px;
+}
+
+.nav-link-login:hover {
+    background: var(--glass-bg);
+    border-color: var(--neon-cyan);
+}
+
+.nav-link-login::after {
+    display: none; /* Remove the underline effect for the button-like link */
+}
+
+/* --- Buttons --- */
+.btn {
+    padding: 10px 24px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-primary-gold {
+    background: var(--neon-gold);
+    color: black;
+    box-shadow: 0 0 15px rgba(255, 170, 0, 0.4);
+}
+.btn-primary-gold:hover {
+    background: #ffc84d;
+    box-shadow: 0 0 25px rgba(255, 170, 0, 0.7);
+    transform: translateY(-2px);
+}
+
+.btn-outline-cyan {
+    background: transparent;
+    border: 1px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+}
+.btn-outline-cyan:hover {
+    background: rgba(0, 243, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+}
+
+.btn-neon-border {
+    background: transparent;
+    border: 1px solid var(--neon-purple);
+    color: #fff;
+}
+.btn-neon-border:hover {
+    border-color: #d86aff;
+    box-shadow: 0 0 15px var(--neon-purple);
+}
+
+/* --- Hero --- */
+/* --- Interactive Content Layering --- */
+/*
+  This rule lifts the main interactive content blocks above the particle canvas (z-index: 0),
+  ensuring they are clickable, while allowing the canvas to be interactive in the empty spaces.
+*/
+.hero-content,
+.pillar-container,
+.pricing-container,
+.ai-logos-section,
+.section-title,
+.footer {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: 60px;
+}
+
+.hero-title {
+    font-size: 4rem;
+    margin: 20px 0;
+    text-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.highlight-gold {
+    color: var(--neon-gold);
+    text-shadow: 0 0 20px var(--neon-gold);
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+}
+
+/* --- Pillars (Fixed Visibility) --- */
+.character-pillars {
+    padding: 100px 5%;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* background-color: var(--bg-darker); */ /* Removed to show video */
+    position: relative;
+    z-index: 1;
+    overflow: hidden; /* Contain the animated grid */
+}
+
+.pillars-background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1; /* Set to -1 to be behind all content in this section */
+    opacity: 0.3; /* Add some opacity to not distract from content */
+}
+
+@keyframes scroll-grid {
+    from { background-position: 0 0; }
+    to { background-position: 40px 40px; }
+}
+
+.section-title {
+    font-size: 2.5rem;
+    margin-bottom: 60px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    border-bottom: 2px solid var(--neon-cyan);
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+.pillar-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    height: 500px;
+}
+
+.pillar-card {
+    width: 80px; /* Closed width */
+    background: rgba(10, 22, 40, 0.6);
+    border: 1px solid var(--glass-border);
+    border-radius: 50px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: width 1.0s cubic-bezier(0.25, 1, 0.5, 1), background 0.3s, opacity 0.4s ease, filter 0.5s ease;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+/* Closed State Styling */
+.pillar-closed-view {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.pillar-label {
+    writing-mode: vertical-rl; /* Fixes the text visibility issue */
+    text-orientation: mixed;
+    transform: rotate(180deg); /* Reads bottom to top */
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 5px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+.pillar-icon {
+    font-size: 2rem;
+    margin-top: 20px;
+    filter: grayscale(100%);
+    transition: filter 0.3s;
+}
+
+.pillar-card:hover .pillar-icon {
+    filter: grayscale(0%);
+}
+
+/* Subtle Hover Affordance for Closed Cards */
+.pillar-card:not(.open):hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 243, 255, 0.3);
+    border-color: var(--neon-cyan);
+}
+
+/* Hover State Styling */
+.pillar-card:hover {
+    width: 80vw;
+    max-width: 1200px;
+    border-radius: 20px;
+    background: rgba(10, 22, 40, 0.95);
+    border-color: var(--neon-gold);
+    z-index: 10;
+    cursor: default;
+}
+
+.pillar-card:hover .pillar-closed-view {
+    display: none;
+}
+
+.pillar-content {
+    padding: 40px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease 0.3s; /* Delay content show until card expands */
+    text-align: center;
+    display: none; /* Hidden by default */
+}
+
+.pillar-card:hover .pillar-content {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.pillar-content h3 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: var(--neon-gold);
+}
+/* --- Pricing (Overhauled) --- */
+.pricing-section {
+    padding: 100px 5%;
+}
+
+.pricing-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.price-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 40px;
+    width: 320px;
+    position: relative;
+    transition: transform 0.4s, box-shadow 0.4s;
+    backdrop-filter: blur(10px);
+}
+
+/* Pricing Hover Animation */
+.price-card:hover {
+    transform: translateY(-15px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    border-color: var(--neon-cyan);
+    opacity: 1;
+    filter: none;
+}
+
+.tier-name {
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    margin-bottom: 15px;
+}
+
+.price-tag {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 30px;
+}
+
+.price-tag span {
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+.feature-list {
+    list-style: none;
+    margin-bottom: 40px;
+    text-align: left;
+}
+
+.feature-list li {
+    margin-bottom: 15px;
+    padding-left: 25px;
+    position: relative;
+    color: #ddd;
+}
+
+.feature-list li::before {
+    content: '>';
+    color: var(--neon-cyan);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+.full-width {
+    width: 100%;
+}
+
+/* Recommended Card Special Styling */
+.price-card.recommended {
+    border: 1px solid var(--neon-gold);
+    box-shadow: 0 0 20px rgba(255, 170, 0, 0.1);
+}
+
+.price-card.recommended:hover {
+    box-shadow: 0 0 30px rgba(255, 170, 0, 0.3);
+}
+
+.popular-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--neon-gold);
+    color: black;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* --- Infinite Scroll --- */
+.ai-logos-section {
+    padding: 40px 0;
+    background: rgba(0,0,0,0.3);
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 50px 0;
+}
+
+.carousel-track {
+    display: flex;
+    animation: scroll 40s linear infinite;
+}
+
+.ai-logos-section.reverse .carousel-track {
+    animation-direction: reverse;
+}
+
+.logo-list {
+    display: flex;
+    flex-shrink: 0;
+    white-space: nowrap; /* ensure items within the list don't wrap */
+}
+
+.logo-item {
+    display: inline-block;
+    margin: 0 40px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: rgba(255,255,255,0.3);
+}
+
+@keyframes scroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .hero-title { font-size: 2.5rem; }
+    .pillar-container { flex-direction: column; height: auto; }
+    .pillar-card { width: 100%; height: 80px; margin-bottom: 10px; }
+    .pillar-card.open { height: auto; }
+    .pillar-label { 
+        writing-mode: horizontal-tb; 
+        transform: none; 
+        margin: 0;
+    }
+    .pillar-closed-view { flex-direction: row; gap: 20px;}
+    .pillar-icon { margin: 0; }
+}
+
+/* --- DSA Topic Box --- */
+@keyframes burn-in-animation {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+        box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--neon-gold), 0 0 20px var(--neon-gold);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.1);
+        box-shadow: 0 0 15px #fff, 0 0 25px var(--neon-gold), 0 0 35px var(--neon-gold), 0 0 45px #ff4500;
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 0 5px #fff, 0 0 10px var(--neon-gold), 0 0 15px #ff4500;
+    }
+}
+
+@keyframes float-animation {
+    0% {
+        transform: translate(-50%, -50%) translateY(0px);
+    }
+    50% {
+        transform: translate(-50%, -50%) translateY(-15px);
+    }
+    100% {
+        transform: translate(-50%, -50%) translateY(0px);
+    }
+}
+
+.dsa-topic-box {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    background: rgba(10, 22, 40, 0.8);
+    border: 1px solid var(--neon-gold);
+    color: var(--neon-gold);
+    padding: 8px 16px; /* Reduced size */
+    border-radius: 8px;
+    font-size: 0.9rem; /* Reduced size */
+    font-weight: bold;
+    z-index: 100;
+    pointer-events: none;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 1s ease, transform 1s ease; /* Add transition for disappearance */
+}
+
+.dsa-topic-box.burn-in {
+    opacity: 1;
+    animation: burn-in-animation 1s ease-out forwards;
+}
+
+.dsa-topic-box.float {
+    opacity: 1;
+    box-shadow: 0 0 5px #fff, 0 0 10px var(--neon-gold), 0 0 15px #ff4500;
+    animation: float-animation 6s ease-in-out infinite;
+}
+
+.dsa-topic-box.disappear {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+}
+
+/* --- Footer --- */
+.site-footer {
+    position: relative;
+    z-index: 2;
+    padding: 30px 5%;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid var(--glass-border);
+    backdrop-filter: blur(5px);
+    color: var(--text-muted);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-link, .social-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s;
+    margin: 0 10px;
+}
+
+.footer-link:hover, .social-link:hover {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 5px var(--neon-cyan);
+}
+
+.social-link {
+    border: 1px solid var(--glass-border);
+    padding: 8px 12px;
+    border-radius: 5px;
+}
+
+.social-link:hover {
+    border-color: var(--neon-cyan);
+}
+
+/* --- Blur Effect for Open Card --- */
+.navbar,
+.site-footer,
+main > section,
+#particles-js {
+    transition: filter 0.5s ease;
+}
+
+body.card-open-blur .navbar,
+body.card-open-blur .site-footer,
+body.card-open-blur main > section:not(#pillars),
+body.card-open-blur #particles-js,
+body.card-open-blur .pillar-card:not(:hover) {
+    filter: blur(4px);
+    pointer-events: none;
+}
+
+/* --- Responsive Design --- */
+
+/* Tablet Breakpoint */
+@media (max-width: 1024px) {
+    .hero-title {
+        font-size: 3rem;
+    }
+    .section-title {
+        font-size: 2rem;
+    }
+    .pillar-container {
+        flex-direction: column;
+        height: auto;
+        gap: 15px;
+    }
+    .pillar-card {
+        width: 100%;
+        height: 80px;
+        margin-bottom: 10px;
+        border-radius: 20px;
+    }
+    .pillar-card.open {
+        height: auto;
+    }
+    .pillar-label {
+        writing-mode: horizontal-tb;
+        transform: none;
+        margin: 0;
+        font-size: 1.2rem;
+    }
+    .pillar-closed-view {
+        flex-direction: row;
+        justify-content: flex-start;
+        padding-left: 30px;
+        gap: 20px;
+    }
+    .pillar-icon {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+}
+
+/* Mobile Breakpoint */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 15px 5%;
+    }
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 40px;
+    }
+    .price-card {
+        width: 100%;
+        max-width: 340px;
+    }
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* --- Hamburger Menu Styles --- */
+.hamburger-menu {
+    display: none; /* Hidden on desktop */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1001;
+    position: relative;
+}
+
+.hamburger-line {
+    display: block;
+    width: 25px;
+    height: 2px;
+    background-color: #fff;
+    margin: 5px 0;
+    transition: all 0.3s ease-in-out;
+}
+
+@media (max-width: 1024px) {
+    .hamburger-menu {
+        display: block; /* Show on tablet and smaller */
+    }
+
+    .nav-container {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.97);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .nav-active .nav-container {
+        display: flex; /* Show the mobile nav when body has .nav-active */
+    }
+
+    /* Animate hamburger to an 'X' */
+    .nav-active .hamburger-line:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+    .nav-active .hamburger-line:nth-child(2) {
+        opacity: 0;
+    }
+    .nav-active .hamburger-line:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .navbar .nav-links {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .navbar .nav-link {
+        font-size: 1.5rem;
+        margin: 20px 0;
+    }
+
+    .navbar .nav-actions {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 30px;
+    }
+
+    .navbar .nav-actions .btn {
+        margin-top: 20px;
+    }
+}
