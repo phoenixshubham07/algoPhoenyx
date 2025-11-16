@@ -51,65 +51,6 @@ const LandingPage = () => {
       });
     });
 
-    // --- 6. DSA Topic Box on Click ---
-    const dsaTopics = [
-      'Arrays', 'Linked Lists', 'Stacks', 'Queues', 'Binary Trees',
-      'Binary Search Trees', 'Heaps', 'Hash Tables', 'Graphs',
-      'Linear Search', 'Binary Search', 'Bubble Sort', 'Insertion Sort',
-      'Selection Sort', 'Merge Sort', 'Quick Sort', 'Heap Sort',
-      'Depth-First Search', 'Breadth-First Search', "Dijkstra's Algorithm",
-      'Recursion', 'Dynamic Programming',
-    ];
-    let clickCount = 0;
-    let topicIndex = 0;
-    const particlesDiv = document.getElementById('particles-js');
-
-    if (particlesDiv) {
-      particlesDiv.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement;
-        if (target.tagName.toLowerCase() !== 'canvas') {
-          return;
-        }
-
-        clickCount++;
-
-        if (clickCount % 5 === 1 || clickCount % 5 === 3) {
-          const topic = dsaTopics[topicIndex % dsaTopics.length];
-          topicIndex++;
-
-          const topicBox = document.createElement('div');
-          topicBox.className = 'dsa-topic-box burn-in';
-          topicBox.textContent = topic;
-          document.body.appendChild(topicBox);
-
-          topicBox.style.left = `${e.clientX + window.scrollX}px`;
-          topicBox.style.top = `${e.clientY + window.scrollY}px`;
-
-          topicBox.addEventListener(
-            'animationend',
-            (animEvent: AnimationEvent) => {
-              if (animEvent.animationName === 'burn-in-animation') {
-                topicBox.classList.remove('burn-in');
-                topicBox.classList.add('float');
-              }
-            },
-            { once: true }
-          );
-
-          setTimeout(() => {
-            topicBox.classList.remove('float');
-            topicBox.classList.add('disappear');
-          }, 5000);
-
-          setTimeout(() => {
-            if (topicBox.parentNode) {
-              topicBox.remove();
-            }
-          }, 6000);
-        }
-      });
-    }
-
     // --- 7. Pricing Card Hover Effect ---
     const priceCards = document.querySelectorAll('.price-card');
     priceCards.forEach((card) => {
@@ -121,10 +62,54 @@ const LandingPage = () => {
       });
     });
 
+    // --- Amaterasu Card Video Logic ---
+    const amaterasuCard = document.querySelector('[data-character="amaterasu"]');
+    const amaterasuVideo = document.getElementById('amaterasu-video') as HTMLVideoElement | null;
+    const amaterasuDesc = document.getElementById('amaterasu-desc');
+
+    const handleMouseEnter = () => {
+      if (amaterasuVideo) {
+        amaterasuVideo.load(); // Explicitly load the video
+        setTimeout(() => { // Add a short delay
+          amaterasuVideo.play().catch(error => {
+            // Catch potential play() errors, e.g., if not ready
+            console.error("Error playing Amaterasu video:", error);
+          });
+        }, 200); // 200ms delay
+      }
+    };
+
+    const handleMouseLeave = () => {
+      if (amaterasuVideo && amaterasuDesc) {
+        amaterasuVideo.pause();
+        amaterasuVideo.currentTime = 0;
+        amaterasuVideo.classList.remove('video-blurred');
+        amaterasuDesc.classList.remove('desc-visible');
+      }
+    };
+
+    const handleVideoEnd = () => {
+      if (amaterasuVideo && amaterasuDesc) {
+        amaterasuVideo.classList.add('video-blurred');
+        amaterasuDesc.classList.add('desc-visible');
+      }
+    };
+
+    if (amaterasuCard && amaterasuVideo) {
+      amaterasuCard.addEventListener('mouseenter', handleMouseEnter);
+      amaterasuCard.addEventListener('mouseleave', handleMouseLeave);
+      amaterasuVideo.addEventListener('ended', handleVideoEnd);
+    }
+
+
     // Cleanup function to remove event listeners
     return () => {
       document.querySelectorAll('.hidden').forEach((el) => observer.unobserve(el));
-      // Other cleanup if necessary
+      if (amaterasuCard && amaterasuVideo) {
+        amaterasuCard.removeEventListener('mouseenter', handleMouseEnter);
+        amaterasuCard.removeEventListener('mouseleave', handleMouseLeave);
+        amaterasuVideo.removeEventListener('ended', handleVideoEnd);
+      }
     };
   }, []);
 
@@ -162,10 +147,20 @@ const LandingPage = () => {
                 <span className="pillar-label">AMATERASU</span>
                 <div className="pillar-icon">☀️</div>
               </div>
+              <video
+                id="amaterasu-video"
+                src="/amavid1card.mov"
+                muted
+                loop={false}
+                playsInline
+                className="pillar-video"
+              ></video>
               <div className="pillar-content amaterasu-theme">
                 <h3>AlgoAmaterasu</h3>
                 <p className="pillar-role">The Illuminator</p>
-                <p className="pillar-desc">Provides wisdom and logic debugging. She lights the path through complex algorithms.</p>
+                <p id="amaterasu-desc" className="pillar-desc">
+                  Provides wisdom and logic debugging. She lights the path through complex algorithms.
+                </p>
                 <button className="btn btn-close-modal">Close Link</button>
               </div>
             </div>

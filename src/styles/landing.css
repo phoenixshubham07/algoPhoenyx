@@ -296,7 +296,7 @@ body {
     border: 1px solid var(--glass-border);
     border-radius: 50px;
     position: relative;
-    overflow: hidden;
+    overflow: hidden; /* Ensure video is clipped to card boundaries */
     cursor: pointer;
     transition: width 1.0s cubic-bezier(0.25, 1, 0.5, 1), background 0.3s, opacity 0.4s ease, filter 0.5s ease;
     backdrop-filter: blur(5px);
@@ -359,6 +359,8 @@ body {
 }
 
 .pillar-content {
+    position: relative; /* Establish positioning context for children */
+    z-index: 2; /* Ensure content is above the video */
     padding: 40px;
     opacity: 0;
     transform: translateY(20px);
@@ -378,6 +380,43 @@ body {
     margin-bottom: 10px;
     color: var(--neon-gold);
 }
+.pillar-content h3,
+.pillar-content .pillar-role,
+.pillar-content .pillar-desc,
+.pillar-content .btn {
+    position: relative;
+    z-index: 2;
+}
+
+.pillar-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 1s ease-in-out, filter 0.7s ease;
+}
+
+.pillar-card:hover .pillar-video {
+    opacity: 0.5;
+}
+
+.pillar-video.video-blurred {
+    filter: blur(8px);
+}
+
+#amaterasu-desc {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#amaterasu-desc.desc-visible {
+    opacity: 1;
+}
+
 /* --- Pricing (Overhauled) --- */
 .pricing-section {
     padding: 100px 5%;

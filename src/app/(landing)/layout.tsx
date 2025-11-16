@@ -1,65 +1,14 @@
 'use client';
 
-import Script from 'next/script';
 import { useEffect } from 'react';
-import { usePathname } from 'next/navigation';
 import '@/styles/landing.css';
-
-declare global {
-  interface Window {
-    pJSDom: any[];
-    particlesJS: any;
-  }
-}
+import ParticlesBackground from '@/components/ParticlesBackground';
 
 export default function LandingLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-
-  const handleParticlesInit = () => {
-    if (window.particlesJS) {
-      // Destroy existing instance to prevent duplicates on navigation
-      if (window.pJSDom && window.pJSDom.length > 0) {
-        window.pJSDom[0].pJS.fn.vendors.destroypJS();
-        window.pJSDom = [];
-      }
-
-      let lineColor = '#ffaa00'; // Default neon gold
-      if (pathname === '/hikari') {
-        lineColor = '#00f3ff'; // Neon cyan for Hikari
-      } else if (pathname === '/judgement-hall') {
-        lineColor = '#bc13fe'; // Neon purple for Judgement Hall
-      }
-
-      window.particlesJS('particles-js', {
-        particles: {
-          number: { value: 80, density: { enable: true, value_area: 800 } },
-          color: { value: '#ffffff' },
-          shape: { type: 'circle', stroke: { width: 0, color: '#000000' } },
-          opacity: { value: 0.5, random: true, anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false } },
-          size: { value: 3, random: true, anim: { enable: false, speed: 40, size_min: 0.1, sync: false } },
-          line_linked: { enable: true, distance: 150, color: lineColor, opacity: 0.6, width: 1 },
-          move: { enable: true, speed: 2, direction: 'none', random: false, straight: false, out_mode: 'out', bounce: false, attract: { enable: false, rotateX: 600, rotateY: 1200 } },
-        },
-        interactivity: {
-          detect_on: 'canvas',
-          events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: true, mode: 'push' }, resize: true },
-          modes: {
-            grab: { distance: 140, line_linked: { opacity: 1 } },
-            bubble: { distance: 400, size: 40, duration: 2, opacity: 8, speed: 3 },
-            repulse: { distance: 200, duration: 0.4 },
-            push: { particles_nb: 4 },
-            remove: { particles_nb: 2 },
-          },
-        },
-        retina_detect: true,
-      });
-    }
-  };
-
   useEffect(() => {
     const hamburger = document.querySelector('.hamburger-menu');
     const handleNavToggle = () => document.body.classList.toggle('nav-active');
@@ -75,22 +24,9 @@ export default function LandingLayout({
     };
   }, []);
 
-  // Effect to re-initialize particles on path change
-  useEffect(() => {
-    // Ensure the script is loaded before trying to init
-    if (window.particlesJS) {
-      handleParticlesInit();
-    }
-  }, [pathname]);
-
   return (
     <>
-      <Script
-        id="particles-script"
-        src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"
-        onLoad={handleParticlesInit}
-      />
-      <div id="particles-js"></div>
+      <ParticlesBackground />
 
       <header className="navbar">
         <div className="logo-brand">
@@ -135,3 +71,4 @@ export default function LandingLayout({
     </>
   );
 }
+

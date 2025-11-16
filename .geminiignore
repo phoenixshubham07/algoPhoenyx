@@ -1,0 +1,77 @@
+# Dependency & Environment Folders
+node_modules/
+venv/
+.venv/
+
+# Build & Artifacts
+dist/
+build/
+__pycache__/
+
+# Logs and Configuration
+*.log
+.git/
+.gitignore# 1. Dependency & Environment Folders
+node_modules/
+venv/
+.venv/
+.tox/
+.pytest_cache/
+
+# 2. Build & Artifacts (Crucial for Token Saving)
+dist/
+build/
+*.pyc 
+*.o
+*.so
+*.dll
+*.exe
+
+# 3. Cache and Logs
+__pycache__/
+.mypy_cache/
+htmlcov/
+*.log
+
+# 4. Configuration & Editor Files
+.git/
+.gitignore
+.vscode/
+*.swp
+*.swo# 1. Dependency & Virtual Environment Folders
+venv/
+.venv/
+node_modules/
+vendor/
+
+# 2. Build and Artifact Files (Massive Token Savers)
+# Compiled Python files
+*.pyc
+__pycache__/
+
+# Compiled C/C++ or general object files
+*.o
+*.so
+*.dll
+*.exe
+
+# General build directories
+dist/
+build/
+bin/
+
+# 3. IDE, Editor, and Configuration Files
+.git/
+.gitignore
+.vscode/           # VS Code settings, not code
+.idea/             # PyCharm / IntelliJ IDEA files
+*.swp              # Vim swap files
+*.bak              # Backup files
+*.tmp              # Temporary files
+Thumbs.db          # macOS/Windows thumbnail caches
+
+# 4. Testing and Log Data
+.pytest_cache/     # Pytest caches
+.tox/              # Tox environment builder
+htmlcov/           # Test coverage reports
+*.log
