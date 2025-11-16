@@ -1,11 +1,14 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useState } from 'react';
+import HikariSplash from '@/components/HikariSplash';
 
 const HikariPage = () => {
-  useEffect(() => {
-    // Page-specific scripts can be initialized here
-  }, []);
+  const [isSplashFinished, setIsSplashFinished] = useState(false);
+
+  if (!isSplashFinished) {
+    return <HikariSplash onFinished={() => setIsSplashFinished(true)} />;
+  }
 
   return (
     <div style={{
