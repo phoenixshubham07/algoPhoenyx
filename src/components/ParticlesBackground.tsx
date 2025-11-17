@@ -65,7 +65,7 @@ const ParticlesBackground = () => {
             enable: true,
             mode: 'grab',
           },
-          resize: true,
+          resize: { enable: true },
         },
         modes: {
           push: {

@@ -1,3 +1,7 @@
+html, body, * {
+    cursor: url('/cursor1.png?v=1') 16 16, auto !important;
+}
+
 :root {
     --bg-dark: #000000;
     --bg-darker: #050b14;
@@ -21,6 +25,22 @@ body {
     background-color: var(--bg-dark);
     color: var(--text-main);
     overflow-x: hidden;
+    /* Disable Text Selection */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}
+
+/* Hide Scrollbar */
+html, body, * {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
 }
 
 /* --- Particles Background --- */

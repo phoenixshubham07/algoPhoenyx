@@ -1,8 +1,10 @@
 'use client';
 
 import Script from 'next/script';
-import Head from 'next/head';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
+import './HikariSplash.css';
+
+declare const gsap: any;
 
 interface HikariSplashProps {
   onFinished: () => void;
@@ -10,11 +12,9 @@ interface HikariSplashProps {
 
 const HikariSplash = ({ onFinished }: HikariSplashProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const animationRan = useRef(false);
 
   const runAnimation = () => {
-    if (animationRan.current || !containerRef.current) return;
-    animationRan.current = true;
+    if (!containerRef.current) return;
 
     const container = containerRef.current;
     if (typeof gsap === 'undefined') {
@@ -93,17 +93,9 @@ const HikariSplash = ({ onFinished }: HikariSplashProps) => {
   };
 
   return (
-    <div ref={containerRef} style={{
-        position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: '#000', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center'
-    }}>
-      <Head>
-        <title>Entering Hikari's Grove...</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet" />
-      </Head>
+    <div ref={containerRef} className="hikari-splash-container">
       <Script id="gsap-script" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" strategy="afterInteractive" onLoad={runAnimation} />
-      <div style={{ fontFamily: '"Montserrat", sans-serif', fontWeight: 900, overflow: 'hidden' }}>
+      <div className="hikari-splash-font">
         <div className="pov">
             <div className="tray">
                 <div className="die">
@@ -116,12 +108,6 @@ const HikariSplash = ({ onFinished }: HikariSplashProps) => {
                 </div>
             </div>
         </div>
-        <style jsx global>{`
-            .pov { width: 100%; height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; }
-            .die { width: 400px; height: 55px; padding-bottom: 9px; perspective: 999px; }
-            .cube { position: absolute; width: 100%; height: 100%; transform-style: preserve-3d; }
-            .face { position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; backface-visibility: hidden; }
-        `}</style>
       </div>
     </div>
   );

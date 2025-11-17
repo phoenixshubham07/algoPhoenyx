@@ -35,19 +35,20 @@ const LandingPage = () => {
     // --- 4. Button Ripple Effect ---
     const buttons = document.querySelectorAll('.btn');
     buttons.forEach((button) => {
-      button.addEventListener('click', function (e) {
+      button.addEventListener('click', (e) => {
+        const mouseEvent = e as MouseEvent;
         let ripple = document.createElement('span');
         ripple.classList.add('btn-ripple');
-        const rect = button.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+        const x = mouseEvent.clientX - rect.left;
+        const y = mouseEvent.clientY - rect.top;
         ripple.style.left = `${x}px`;
         ripple.style.top = `${y}px`;
-        const existingRipple = button.querySelector('.btn-ripple');
+        const existingRipple = (e.currentTarget as HTMLElement).querySelector('.btn-ripple');
         if (existingRipple) {
           existingRipple.remove();
         }
-        this.appendChild(ripple);
+        (e.currentTarget as HTMLElement).appendChild(ripple);
       });
     });
 

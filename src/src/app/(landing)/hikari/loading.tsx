@@ -1,23 +1,22 @@
 'use client';
 
 import Script from 'next/script';
-import Head from 'next/head';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
+import './hikari-loading.css';
+
+declare const gsap: any;
 
 const HikariLoading = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const animationRan = useRef(false);
 
   const runAnimation = () => {
-    if (animationRan.current || !containerRef.current) return;
-    
+    if (!containerRef.current) return;
 
     const container = containerRef.current;
     if (typeof gsap === 'undefined') {
         console.error("GSAP not loaded");
         return;
     }
-    animationRan.current = true;
 
     const n = 19;
     const rots = [
@@ -113,52 +112,15 @@ const HikariLoading = () => {
     };
   };
 
-  useEffect(() => {
-    let cleanup: (() => void) | undefined;
-    
-    const onLoad = () => {
-      cleanup = runAnimation();
-    }
-
-    const script = document.querySelector('script[src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"]');
-
-    if (window.gsap) {
-      onLoad();
-    } else {
-      script?.addEventListener('load', onLoad);
-    }
-    
-    return () => {
-      script?.removeEventListener('load', onLoad);
-      cleanup?.();
-    };
-  }, []);
-
   return (
     <>
-      <Head>
-        <title>Loading Hikari...</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet" />
-      </Head>
       <Script
         id="gsap-script"
         src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
         strategy="afterInteractive"
+        onLoad={runAnimation}
       />
-      <div ref={containerRef} style={{
-          fontFamily: '"Montserrat", sans-serif',
-          fontWeight: 900,
-          background: '#000',
-          overflow: 'hidden',
-          width: '100vw',
-          height: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          margin: 0,
-      }}>
+      <div ref={containerRef} className="hikari-loading-container">
         <div className="pov">
             <div className="tray">
                 <div className="die">
@@ -171,37 +133,6 @@ const HikariLoading = () => {
                 </div>
             </div>
         </div>
-        <style jsx global>{`
-            .pov {
-                width: 100%;
-                height: 100vh;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin: 0;
-            }
-            .die {
-                width: 400px;
-                height: 55px;
-                padding-bottom: 9px;
-                perspective: 999px;
-            }
-            .cube {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                transform-style: preserve-3d;
-            }
-            .face {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                backface-visibility: hidden;
-            }
-        `}</style>
       </div>
     </>
   );
