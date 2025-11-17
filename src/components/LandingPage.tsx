@@ -1,10 +1,35 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const LandingPage = () => {
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+
   useEffect(() => {
-    // --- 2. Scroll-Triggered Fade-in Animations ---
+    const handleMouseDown = (event: MouseEvent) => {
+      if (event.button === 0) {
+        // Left mouse button
+        document.body.classList.add('cursor-click');
+      }
+    };
+
+    const handleMouseUp = (event: MouseEvent) => {
+      if (event.button === 0) {
+        // Left mouse button
+        document.body.classList.remove('cursor-click');
+      }
+    };
+
+    document.body.addEventListener('mousedown', handleMouseDown);
+    document.body.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      document.body.removeEventListener('mousedown', handleMouseDown);
+      document.body.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, []);
+
+  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -17,11 +42,8 @@ const LandingPage = () => {
       },
       { threshold: 0.1 }
     );
-    document
-      .querySelectorAll('.hidden')
-      .forEach((el) => observer.observe(el));
+    document.querySelectorAll('.hidden').forEach((el) => observer.observe(el));
 
-    // --- 3. Pillar Card Logic ---
     const cards = document.querySelectorAll('.pillar-card');
     cards.forEach((card) => {
       card.addEventListener('mouseenter', () => {
@@ -32,7 +54,6 @@ const LandingPage = () => {
       });
     });
 
-    // --- 4. Button Ripple Effect ---
     const buttons = document.querySelectorAll('.btn');
     buttons.forEach((button) => {
       button.addEventListener('click', (e) => {
@@ -44,7 +65,9 @@ const LandingPage = () => {
         const y = mouseEvent.clientY - rect.top;
         ripple.style.left = `${x}px`;
         ripple.style.top = `${y}px`;
-        const existingRipple = (e.currentTarget as HTMLElement).querySelector('.btn-ripple');
+        const existingRipple = (
+          e.currentTarget as HTMLElement
+        ).querySelector('.btn-ripple');
         if (existingRipple) {
           existingRipple.remove();
         }
@@ -52,7 +75,6 @@ const LandingPage = () => {
       });
     });
 
-    // --- 7. Pricing Card Hover Effect ---
     const priceCards = document.querySelectorAll('.price-card');
     priceCards.forEach((card) => {
       card.addEventListener('mouseenter', () => {
@@ -63,29 +85,38 @@ const LandingPage = () => {
       });
     });
 
-    // --- Amaterasu Card Video Logic ---
-    const amaterasuCard = document.querySelector('[data-character="amaterasu"]');
-    const amaterasuVideo = document.getElementById('amaterasu-video') as HTMLVideoElement | null;
+    const amaterasuCard = document.querySelector(
+      '[data-character="amaterasu"]'
+    );
+    const amaterasuVideo = document.getElementById(
+      'amaterasu-video'
+    ) as HTMLVideoElement | null;
     const amaterasuDesc = document.getElementById('amaterasu-desc');
 
     const handleMouseEnter = () => {
-      if (amaterasuVideo) {
-        amaterasuVideo.load(); // Explicitly load the video
-        setTimeout(() => { // Add a short delay
-          amaterasuVideo.play().catch(error => {
-            // Catch potential play() errors, e.g., if not ready
-            console.error("Error playing Amaterasu video:", error);
-          });
-        }, 200); // 200ms delay
+      document.body.classList.add('cursor-hover');
+      if (amaterasuVideo && !isVideoPlaying) {
+        const playPromise = amaterasuVideo.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsVideoPlaying(true);
+            })
+            .catch((error) => {
+              console.error('Error playing Amaterasu video:', error);
+            });
+        }
       }
     };
 
     const handleMouseLeave = () => {
-      if (amaterasuVideo && amaterasuDesc) {
+      document.body.classList.remove('cursor-hover');
+      if (amaterasuVideo && isVideoPlaying) {
         amaterasuVideo.pause();
         amaterasuVideo.currentTime = 0;
         amaterasuVideo.classList.remove('video-blurred');
-        amaterasuDesc.classList.remove('desc-visible');
+        amaterasuDesc?.classList.remove('desc-visible');
+        setIsVideoPlaying(false);
       }
     };
 
@@ -102,17 +133,17 @@ const LandingPage = () => {
       amaterasuVideo.addEventListener('ended', handleVideoEnd);
     }
 
-
-    // Cleanup function to remove event listeners
     return () => {
-      document.querySelectorAll('.hidden').forEach((el) => observer.unobserve(el));
+      document
+        .querySelectorAll('.hidden')
+        .forEach((el) => observer.unobserve(el));
       if (amaterasuCard && amaterasuVideo) {
         amaterasuCard.removeEventListener('mouseenter', handleMouseEnter);
         amaterasuCard.removeEventListener('mouseleave', handleMouseLeave);
         amaterasuVideo.removeEventListener('ended', handleVideoEnd);
       }
     };
-  }, []);
+  }, [isVideoPlaying]);
 
   return (
     <>
@@ -125,7 +156,9 @@ const LandingPage = () => {
             <h1 className="hero-title">
               FALL. <span className="highlight-gold">CODE.</span> BURN.
             </h1>
-            <p className="hero-subtitle">Finding the Spark at the Nexus of Creativity and Code.</p>
+            <p className="hero-subtitle">
+              Finding the Spark at the Nexus of Creativity and Code.
+            </p>
             <div className="hero-actions">
               <button className="btn btn-primary-gold">Login</button>
               <button className="btn btn-outline-cyan">Demo Protocol</button>
@@ -160,7 +193,8 @@ const LandingPage = () => {
                 <h3>AlgoAmaterasu</h3>
                 <p className="pillar-role">The Illuminator</p>
                 <p id="amaterasu-desc" className="pillar-desc">
-                  Provides wisdom and logic debugging. She lights the path through complex algorithms.
+                  Provides wisdom and logic debugging. She lights the path
+                  through complex algorithms.
                 </p>
                 <button className="btn btn-close-modal">Close Link</button>
               </div>
@@ -174,7 +208,10 @@ const LandingPage = () => {
               <div className="pillar-content inari-theme">
                 <h3>AlgoInari</h3>
                 <p className="pillar-role">The Resource</p>
-                <p className="pillar-desc">Manages assets and adapts to new frameworks. The shapeshifter of your tech stack.</p>
+                <p className="pillar-desc">
+                  Manages assets and adapts to new frameworks. The
+                  shapeshifter of your tech stack.
+                </p>
                 <button className="btn btn-close-modal">Close Link</button>
               </div>
             </div>
@@ -187,7 +224,10 @@ const LandingPage = () => {
               <div className="pillar-content raiden-theme">
                 <h3>AlgoRaiden</h3>
                 <p className="pillar-role">The Executor</p>
-                <p className="pillar-desc">Speed, execution, and raw power. Compiles and deploys at lightning speeds.</p>
+                <p className="pillar-desc">
+                  Speed, execution, and raw power. Compiles and deploys at
+                  lightning speeds.
+                </p>
                 <button className="btn btn-close-modal">Close Link</button>
               </div>
             </div>
@@ -220,22 +260,22 @@ const LandingPage = () => {
         <section className="ai-logos-section hidden reverse">
           <div className="carousel-track">
             <div className="logo-list">
-                <div className="logo-item">Go</div>
-                <div className="logo-item">TypeScript</div>
-                <div className="logo-item">PostgreSQL</div>
-                <div className="logo-item">GraphQL</div>
-                <div className="logo-item">Terraform</div>
-                <div className="logo-item">Ansible</div>
-                <div className="logo-item">Jenkins</div>
+              <div className="logo-item">Go</div>
+              <div className="logo-item">TypeScript</div>
+              <div className="logo-item">PostgreSQL</div>
+              <div className="logo-item">GraphQL</div>
+              <div className="logo-item">Terraform</div>
+              <div className="logo-item">Ansible</div>
+              <div className="logo-item">Jenkins</div>
             </div>
             <div className="logo-list" aria-hidden="true">
-                <div className="logo-item">Go</div>
-                <div className="logo-item">TypeScript</div>
-                <div className="logo-item">PostgreSQL</div>
-                <div className="logo-item">GraphQL</div>
-                <div className="logo-item">Terraform</div>
-                <div className="logo-item">Ansible</div>
-                <div className="logo-item">Jenkins</div>
+              <div className="logo-item">Go</div>
+              <div className="logo-item">TypeScript</div>
+              <div className="logo-item">PostgreSQL</div>
+              <div className="logo-item">GraphQL</div>
+              <div className="logo-item">Terraform</div>
+              <div className="logo-item">Ansible</div>
+              <div className="logo-item">Jenkins</div>
             </div>
           </div>
         </section>
@@ -246,21 +286,27 @@ const LandingPage = () => {
             <div className="price-card hidden">
               <div className="card-header">
                 <h3 className="tier-name">Initiate</h3>
-                <div className="price-tag">$19<span>/mo</span></div>
+                <div className="price-tag">
+                  $19<span>/mo</span>
+                </div>
               </div>
               <ul className="feature-list">
                 <li>Basic Raiden Access</li>
                 <li>Community Support</li>
                 <li>5 Projects</li>
               </ul>
-              <button className="btn btn-outline-cyan full-width">Choose Path</button>
+              <button className="btn btn-outline-cyan full-width">
+                Choose Path
+              </button>
             </div>
 
             <div className="price-card recommended hidden">
               <div className="popular-badge">MOST POPULAR</div>
               <div className="card-header">
                 <h3 className="tier-name">Adept</h3>
-                <div className="price-tag">$49<span>/mo</span></div>
+                <div className="price-tag">
+                  $49<span>/mo</span>
+                </div>
               </div>
               <ul className="feature-list">
                 <li>Full Inari & Raiden Access</li>
@@ -268,21 +314,27 @@ const LandingPage = () => {
                 <li>Unlimited Projects</li>
                 <li>API Access</li>
               </ul>
-              <button className="btn btn-primary-gold full-width">Ascend Now</button>
+              <button className="btn btn-primary-gold full-width">
+                Ascend Now
+              </button>
             </div>
 
             <div className="price-card hidden">
               <div className="card-header">
                 <h3 className="tier-name">Ascendant</h3>
-                <div className="price-tag">$99<span>/mo</span></div>
+                <div className="price-tag">
+                  $99<span>/mo</span>
+                </div>
               </div>
               <ul className="feature-list">
-                <li><strong>All Pillar Access</strong></li>
+                <li>
+                  <strong>All Pillar Access</strong>
+                </li>
                 <li>Dedicated Mentor</li>
                 <li>White-label Solutions</li>
                 <li>Early Beta Access</li>
               </ul>
-              <button className="btn btn-neon-border full-width">Contact Us</button>
+              <button className="btn btn-neon-border full.width">Contact Us</button>
             </div>
           </div>
         </section>

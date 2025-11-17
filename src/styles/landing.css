@@ -1,6 +1,19 @@
 html, body, * {
-    cursor: url('/cursor1.png?v=1') 16 16, auto !important;
+    cursor: url('/cursor1.svg') 16 16, auto;
 }
+
+body .btn:hover,
+body .pillar-card:hover,
+body .price-card:hover,
+body .nav-link:hover,
+body .footer-link:hover,
+body .social-link:hover,
+body.cursor-hover,
+body.cursor-click {
+    cursor: url('/cursor2.svg') 16 16, auto;
+}
+
+
 
 :root {
     --bg-dark: #000000;
